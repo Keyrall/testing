@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-application.fullname" . }}-back
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "my-application.fullname" . }}-back
+  template:
+    metadata:
+      labels:
+        app: {{ include "my-application.fullname" . }}-back
+    spec:
+      containers:
+        - name: back
+          image: "{{ .Values.image.backend.repository }}:{{ .Values.image.backend.tag }}"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_POSTGRES_USERNAME
+              value: {{ .Values.env.SPRING_POSTGRES_USERNAME }}
+            - name: SPRING_POSTGRES_PASSWORD
+              value: {{ .Values.env.SPRING_POSTGRES_PASSWORD }}
+            - name: SPRING_POSTGRES_URL
+              value: {{ .Values.env.SPRING_POSTGRES_URL }}
